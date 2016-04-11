@@ -1,0 +1,28 @@
+package com.proxy.cglib;
+
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+
+import java.lang.reflect.Method;
+
+/**
+ * Created by wanglei25 on 2016/4/11.
+ */
+public class CglibProxy  implements MethodInterceptor{
+
+    private Enhancer enhancer = new Enhancer();
+
+    public Object getProxy(Class clazz){
+        enhancer.setSuperclass(clazz);
+        enhancer.setCallback(this);
+        return enhancer.create();
+    }
+
+    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+        System.out.println("Before Call method "+ method.getName());
+        Object result = methodProxy.invokeSuper(o,objects);
+        System.out.println("End Call method "+ method.getName());
+        return result;
+    }
+}
